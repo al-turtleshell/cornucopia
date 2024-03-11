@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OutboxState {
+  Pending
+  Published
+}
+
+enum InboxState {
+  Pending
+  Processed
+}
+
+
+model EventStore {
+  id            String          @id @default(uuid())
+  aggregateId   String
+  type          String          
+  payload       Json            
+  timestamp     DateTime        @default(now())
+
+  @@index([aggregateId])
+}
+
+model AggregateVersion {
+  aggregateId String    @id
+  version     String
+
+  @@index([aggregateId])
+}
+
+
+model Outbox {
+  id          String     @id @default(uuid())
+  type        String    
+  payload     Json       
+  state       OutboxState 
+  timestamp   DateTime   @default(now())
+  publishedAt DateTime? 
+
+  @@index([state, publishedAt], name: "outbox_state_publishedAt_idx")
+}
+
+model Inbox {
+  id          String    @id @default(uuid())
+  type        String   
+  payload     Json      
+  state       InboxState
+  timestamp   DateTime  @default(now())
+  processedAt DateTime?
+
+  @@index([state, processedAt], name: "inbox_state_processedAt_idx")
+}

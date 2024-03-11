@@ -5,13 +5,15 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "oswald:generate-events": "bun ./packages/oswald/src/script/generate-event-registry.ts"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "prettier": "^3.2.5",
-    "turbo": "latest"
+    "turbo": "latest",
+    "eslint": "^8.57.0"
   },
   "engines": {
     "node": ">=18"
@@ -20,5 +22,10 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@types/uuid": "^9.0.8",
+
+    "uuid": "^9.0.1"
+  }
 }
